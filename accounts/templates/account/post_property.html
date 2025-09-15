@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Your Property - PropertyHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.9), rgba(6, 182, 212, 0.8)), url('/placeholder.svg?height=400&width=1920');
+            background-size: cover;
+            background-position: center;
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background-color: #0d9488;
+            color: white;
+        }
+        .step-indicator.completed {
+            background-color: #10b981;
+            color: white;
+        }
+        .drag-drop-area {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        .drag-drop-area.dragover {
+            border-color: #0d9488;
+            background-color: #f0fdfa;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+     <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="" class="text-2xl font-bold text-teal-600">PropertyHub</a>
+                    </div>
+                    <div class="hidden md:block ml-10">
+                        <div class="flex items-baseline space-x-8">
+                            <a href=" " class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">Home</a>
+                            <a href=" " class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">Properties</a>
+                            <a href=" " class="text-gray-900 hover:text-teal-600 px-3 py-2 text-sm font-medium">Post Property</a>
+                            <a href=" " class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">About</a>
+                            <a href=" " class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="flex items-center space-x-4">
+                        <a href="{% url 'account_login' %}" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">Login</a>
+                        <a href="{% url 'account_signup' %}" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300">Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+     <section class="hero-bg h-96 flex items-center justify-center pt-16">
+        <div class="text-center text-white">
+            <h1 class="text-5xl font-bold mb-4">Post Your Property</h1>
+            <p class="text-xl">List your property and connect directly with buyers</p>
+        </div>
+    </section>
+
+     <section class="py-16 -mt-16 relative z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="flex justify-center mb-12">
+                <div class="flex items-center space-x-4">
+                    <div class="step-indicator active flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                        1
+                    </div>
+                    <div class="w-16 h-1 bg-gray-300"></div>
+                    <div class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                        2
+                    </div>
+                    <div class="w-16 h-1 bg-gray-300"></div>
+                    <div class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                        3
+                    </div>
+                </div>
+            </div>
+
+             <div class="bg-white rounded-2xl shadow-xl p-8">
+                <form id="property-form">
+                     <div id="step-1" class="step-content">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-8">Basic Property Information</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Property Title *</label>
+                                <input type="text" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="e.g., Modern Villa in Beverly Hills">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Property Type *</label>
+                                <select required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Property Type</option>
+                                    <option value="house">House</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="villa">Villa</option>
+                                    <option value="condo">Condo</option>
+                                    <option value="commercial">Commercial</option>
+                                    <option value="land">Land</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Listing Type *</label>
+                                <select required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Listing Type</option>
+                                    <option value="sale">For Sale</option>
+                                    <option value="rent">For Rent</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 text-gray-500">$</span>
+                                    <input type="number" required class="w-full p-3 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="850000">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
+                                <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Bedrooms</option>
+                                    <option value="1">1 Bedroom</option>
+                                    <option value="2">2 Bedrooms</option>
+                                    <option value="3">3 Bedrooms</option>
+                                    <option value="4">4 Bedrooms</option>
+                                    <option value="5+">5+ Bedrooms</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
+                                <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Bathrooms</option>
+                                    <option value="1">1 Bathroom</option>
+                                    <option value="2">2 Bathrooms</option>
+                                    <option value="3">3 Bathrooms</option>
+                                    <option value="4">4 Bathrooms</option>
+                                    <option value="5+">5+ Bathrooms</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Area (sq ft)</label>
+                                <input type="number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="2500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Year Built</label>
+                                <input type="number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="2020">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Property Description *</label>
+                            <textarea required rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Describe your property in detail..."></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end mt-8">
+                            <button type="button" id="next-step-1" class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                Next Step <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                     <div id="step-2" class="step-content hidden">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-8">Location & Features</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Address *</label>
+                                <input type="text" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="123 Main Street, City, State, ZIP">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                                <input type="text" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Beverly Hills">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                                <select required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select State</option>
+                                    <option value="CA">California</option>
+                                    <option value="NY">New York</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="FL">Florida</option>
+                                    <option value="IL">Illinois</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <label class="block text-sm font-medium text-gray-700 mb-4">Property Features</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Swimming Pool</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Garage</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Garden</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Fireplace</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Central AC</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Security System</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Balcony</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Parking</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Smart Home</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between mt-8">
+                            <button type="button" id="prev-step-2" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Previous
+                            </button>
+                            <button type="button" id="next-step-2" class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                Next Step <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                     <div id="step-3" class="step-content hidden">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-8">Photos & Contact Information</h2>
+                        
+                        <div class="mb-8">
+                            <label class="block text-sm font-medium text-gray-700 mb-4">Property Photos *</label>
+                            <div class="drag-drop-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                <p class="text-gray-600 mb-2">Drag and drop your photos here, or</p>
+                                <button type="button" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg font-semibold transition duration-300">
+                                    Browse Files
+                                </button>
+                                <p class="text-sm text-gray-500 mt-2">Maximum 10 photos, 5MB each</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Your Name *</label>
+                                <input type="text" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="John Smith">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                                <input type="tel" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="+1 (555) 123-4567">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                                <input type="email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="john@example.com">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Contact Method</label>
+                                <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="phone">Phone</option>
+                                    <option value="email">Email</option>
+                                    <option value="both">Both</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" required class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                <span class="ml-2 text-sm text-gray-600">I agree to the <a href="#" class="text-teal-600 hover:underline">Terms of Service</a> and <a href="#" class="text-teal-600 hover:underline">Privacy Policy</a></span>
+                            </label>
+                        </div>
+                        
+                        <div class="flex justify-between mt-8">
+                            <button type="button" id="prev-step-3" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Previous
+                            </button>
+                            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                <i class="fas fa-check mr-2"></i> Submit Property
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+     <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-2xl font-bold text-teal-400 mb-4">PropertyHub</h3>
+                    <p class="text-gray-300 mb-6 max-w-md">
+                        The modern real estate marketplace connecting buyers and sellers directly.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href=" " class="text-gray-300 hover:text-teal-400 transition duration-300">Properties</a></li>
+                        <li><a href=" " class="text-gray-300 hover:text-teal-400 transition duration-300">Post Property</a></li>
+                        <li><a href=" " class="text-gray-300 hover:text-teal-400 transition duration-300">About Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><i class="fas fa-phone mr-2 text-teal-400"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope mr-2 text-teal-400"></i> info@propertyhub.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>// Post property page JavaScript
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupMultiStepForm()
+  setupFileUpload()
+  setupFormValidation()
+})
+
+function setupMultiStepForm() {
+  let currentStep = 1
+  const totalSteps = 3
+
+  // Step navigation
+  document.getElementById("next-step-1")?.addEventListener("click", () => {
+    if (validateStep(1)) {
+      showStep(2)
+    }
+  })
+
+  document.getElementById("next-step-2")?.addEventListener("click", () => {
+    if (validateStep(2)) {
+      showStep(3)
+    }
+  })
+
+  document.getElementById("prev-step-2")?.addEventListener("click", () => {
+    showStep(1)
+  })
+
+  document.getElementById("prev-step-3")?.addEventListener("click", () => {
+    showStep(2)
+  })
+
+  function showStep(step) {
+    // Hide all steps
+    for (let i = 1; i <= totalSteps; i++) {
+      const stepElement = document.getElementById(`step-${i}`)
+      if (stepElement) {
+        stepElement.classList.add("hidden")
+      }
+    }
+
+    // Show current step
+    const currentStepElement = document.getElementById(`step-${step}`)
+    if (currentStepElement) {
+      currentStepElement.classList.remove("hidden")
+    }
+
+    // Update step indicators
+    updateStepIndicators(step)
+    currentStep = step
+
+    // Scroll to top of form
+    document.querySelector(".bg-white.rounded-2xl").scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
+  }
+
+  function updateStepIndicators(activeStep) {
+    const indicators = document.querySelectorAll(".step-indicator")
+    indicators.forEach((indicator, index) => {
+      const stepNumber = index + 1
+
+      indicator.classList.remove("active", "completed")
+
+      if (stepNumber < activeStep) {
+        indicator.classList.add("completed")
+      } else if (stepNumber === activeStep) {
+        indicator.classList.add("active")
+      }
+    })
+  }
+
+  function validateStep(step) {
+    const stepElement = document.getElementById(`step-${step}`)
+    const requiredFields = stepElement.querySelectorAll("[required]")
+    let isValid = true
+
+    requiredFields.forEach((field) => {
+      if (!field.value.trim()) {
+        field.classList.add("border-red-500")
+        isValid = false
+      } else {
+        field.classList.remove("border-red-500")
+      }
+    })
+
+    if (!isValid) {
+      showNotification("Please fill in all required fields", "error")
+    }
+
+    return isValid
+  }
+}
+
+function setupFileUpload() {
+  const dropArea = document.querySelector(".drag-drop-area")
+  const browseBtn = dropArea?.querySelector("button")
+
+  if (!dropArea) return // Prevent default drag behaviors
+  ;["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+    dropArea.addEventListener(eventName, preventDefaults, false)
+    document.body.addEventListener(eventName, preventDefaults, false)
+  })
+
+  // Highlight drop area when item is dragged over it
+  ;["dragenter", "dragover"].forEach((eventName) => {
+    dropArea.addEventListener(eventName, highlight, false)
+  })
+  ;["dragleave", "drop"].forEach((eventName) => {
+    dropArea.addEventListener(eventName, unhighlight, false)
+  })
+
+  // Handle dropped files
+  dropArea.addEventListener("drop", handleDrop, false)
+
+  // Handle browse button click
+  if (browseBtn) {
+    browseBtn.addEventListener("click", (e) => {
+      e.preventDefault()
+      const input = document.createElement("input")
+      input.type = "file"
+      input.multiple = true
+      input.accept = "image/*"
+      input.addEventListener("change", function () {
+        handleFiles(this.files)
+      })
+      input.click()
+    })
+  }
+
+  function preventDefaults(e) {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  function highlight() {
+    dropArea.classList.add("dragover")
+  }
+
+  function unhighlight() {
+    dropArea.classList.remove("dragover")
+  }
+
+  function handleDrop(e) {
+    const dt = e.dataTransfer
+    const files = dt.files
+    handleFiles(files)
+  }
+
+  function handleFiles(files) {
+    ;[...files].forEach(uploadFile)
+  }
+
+  function uploadFile(file) {
+    if (file.type.startsWith("image/")) {
+      // Create preview
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        addImagePreview(e.target.result, file.name)
+      }
+      reader.readAsDataURL(file)
+    } else {
+      showNotification("Please upload only image files", "error")
+    }
+  }
+
+  function addImagePreview(src, name) {
+    const previewContainer = document.createElement("div")
+    previewContainer.className = "relative inline-block m-2"
+    previewContainer.innerHTML = `
+            <img src="${src}" alt="${name}" class="w-24 h-24 object-cover rounded-lg">
+            <button type="button" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                <i class="fas fa-times"></i>
+            </button>
+        `
+
+    // Add remove functionality
+    previewContainer.querySelector("button").addEventListener("click", () => {
+      previewContainer.remove()
+    })
+
+    // Insert preview after the drop area
+    dropArea.parentNode.insertBefore(previewContainer, dropArea.nextSibling)
+  }
+}
+
+function setupFormValidation() {
+  const form = document.getElementById("property-form")
+
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault()
+
+      if (validateStep(3)) {
+        // Simulate form submission
+        showLoadingState()
+
+        setTimeout(() => {
+          hideLoadingState()
+          showSuccessMessage()
+        }, 2000)
+      }
+    })
+  }
+
+  // Real-time validation
+  const inputs = form?.querySelectorAll("input, select, textarea")
+  inputs?.forEach((input) => {
+    input.addEventListener("blur", function () {
+      validateField(this)
+    })
+
+    input.addEventListener("input", function () {
+      if (this.classList.contains("border-red-500")) {
+        validateField(this)
+      }
+    })
+  })
+}
+
+function validateField(field) {
+  let isValid = true
+
+  // Required field validation
+  if (field.hasAttribute("required") && !field.value.trim()) {
+    isValid = false
+  }
+
+  // Email validation
+  if (field.type === "email" && field.value && !validateEmail(field.value)) {
+    isValid = false
+  }
+
+  // Phone validation
+  if (field.type === "tel" && field.value && !validatePhone(field.value)) {
+    isValid = false
+  }
+
+  // Update field appearance
+  if (isValid) {
+    field.classList.remove("border-red-500")
+    field.classList.add("border-green-500")
+  } else {
+    field.classList.add("border-red-500")
+    field.classList.remove("border-green-500")
+  }
+
+  return isValid
+}
+
+function showLoadingState() {
+  const submitBtn = document.querySelector('button[type="submit"]')
+  if (submitBtn) {
+    submitBtn.disabled = true
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Submitting...'
+  }
+}
+
+function hideLoadingState() {
+  const submitBtn = document.querySelector('button[type="submit"]')
+  if (submitBtn) {
+    submitBtn.disabled = false
+    submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Property'
+  }
+}
+
+function showSuccessMessage() {
+  const form = document.getElementById("property-form")
+  const formContainer = form.parentElement
+
+  formContainer.innerHTML = `
+        <div class="text-center py-12">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-3xl text-green-600"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Property Submitted Successfully!</h2>
+            <p class="text-gray-600 mb-8">Your property listing has been submitted for review. We'll notify you once it's approved and live on our platform.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="properties.html" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-300">
+                    View All Properties
+                </a>
+                <a href="post-property.html" class="border-2 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white px-6 py-3 rounded-lg font-semibold transition duration-300">
+                    Post Another Property
+                </a>
+            </div>
+        </div>
+    `
+}
+
+function showNotification(message, type) {
+  // Implementation for showing notifications
+  console.log(`Notification (${type}): ${message}`)
+}
+
+function validateEmail(email) {
+  // Simple email validation regex
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return re.test(email)
+}
+
+function validatePhone(phone) {
+  // Simple phone validation regex
+  const re = /^\+?[0-9]{7,15}$/
+  return re.test(phone)
+}
+</script>
+</body>
+</html>

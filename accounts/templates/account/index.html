@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropertyHub - Modern Real Estate Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.85), rgba(6, 182, 212, 0.75)),
+                url('/static/img/hero-bg.jpg');
+            /* 👈 you can place your image in static */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .property-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .property-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .hero-bg {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-lg fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="{% url 'index' %}"
+                    class="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                    PropertyHub
+                </a>
+
+                <div class="hidden md:flex items-center justify-center flex-1">
+                    <div class="flex items-baseline space-x-8">
+                        <a href="{% url 'index' %}"
+                            class="text-gray-900 hover:text-teal-600 px-3 py-2 text-sm font-medium">Home</a>
+                        <a href="#"
+                            class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">Properties</a>
+                        <a href="{% url 'post_property' %}"
+                            class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">
+                            Post Property
+                        </a>
+                        <a href="#" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">About</a>
+                        <a href="#" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+
+                <div class="hidden md:block">
+                    <div class="flex items-center space-x-4">
+                        {% if user.is_authenticated %}
+                        <span class="mr-4 text-gray-700">Hello, {{ user.username }}</span>
+                        <a href="{% url 'account_logout' %}" class="bg-red-500 text-white px-4 py-2 rounded-full">
+                            Logout
+                        </a>
+                        {% else %}
+                        <a href="{% url 'account_login' %}"
+                            class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium">
+                            Login
+                        </a>
+                        <a href="{% url 'account_signup' %}"
+                            class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-6 py-2 rounded-full">
+                            Sign Up
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+    <section class="hero-bg min-h-screen flex items-center justify-center pt-16">
+        <div class="max-w-6xl mx-auto text-center px-4 sm:px-6 lg:px-8 animate-fade-in">
+            <h1
+                class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-slide-up leading-tight">
+                Find Your Dream Property
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl text-white/90 mb-12 animate-slide-up max-w-3xl mx-auto"
+                style="animation-delay: 0.2s;">
+                Direct connection between buyers and sellers. No agents, no commissions.
+            </p>
+
+            <div class="glass-card rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl max-w-5xl mx-auto animate-scale-in"
+                style="animation-delay: 0.4s;">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <select
+                            class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300">
+                            <option>All Locations</option>
+                            <option>New York</option>
+                            <option>Los Angeles</option>
+                            <option>Chicago</option>
+                            <option>Miami</option>
+                        </select>
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+                        <select
+                            class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300">
+                            <option>All Types</option>
+                            <option>House</option>
+                            <option>Apartment</option>
+                            <option>Villa</option>
+                            <option>Commercial</option>
+                        </select>
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                        <select
+                            class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300">
+                            <option>Any Price</option>
+                            <option>$0 - $500K</option>
+                            <option>$500K - $1M</option>
+                            <option>$1M - $2M</option>
+                            <option>$2M+</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button
+                            class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white p-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-search mr-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Browse by Category</h2>
+                <p class="text-xl text-gray-600">Find the perfect property type for your needs</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="group cursor-pointer">
+                    <div
+                        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 h-64 flex items-center justify-center transform transition duration-300 group-hover:scale-105">
+                        <div class="text-center text-white">
+                            <i class="fas fa-home text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">For Sale</h3>
+                            <p class="text-teal-100">1,234 Properties</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="group cursor-pointer">
+                    <div
+                        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 h-64 flex items-center justify-center transform transition duration-300 group-hover:scale-105">
+                        <div class="text-center text-white">
+                            <i class="fas fa-key text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">For Rent</h3>
+                            <p class="text-blue-100">856 Properties</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="group cursor-pointer">
+                    <div
+                        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 h-64 flex items-center justify-center transform transition duration-300 group-hover:scale-105">
+                        <div class="text-center text-white">
+                            <i class="fas fa-building text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Residential</h3>
+                            <p class="text-emerald-100">2,045 Properties</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="group cursor-pointer">
+                    <div
+                        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 h-64 flex items-center justify-center transform transition duration-300 group-hover:scale-105">
+                        <div class="text-center text-white">
+                            <i class="fas fa-city text-4xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Commercial</h3>
+                            <p class="text-purple-100">423 Properties</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Featured Properties</h2>
+                <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">Discover our handpicked premium listings
+                </p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div class="property-card bg-white rounded-3xl shadow-lg overflow-hidden h-full flex flex-col">
+                    <div class="relative">
+                        <img src="/placeholder.svg?height=280&width=400" alt="Modern Villa"
+                            class="w-full h-64 sm:h-72 object-cover">
+                        <div class="absolute top-4 left-4">
+                            <span
+                                class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">For
+                                Sale</span>
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <button
+                                class="bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 p-3 rounded-full transition-all duration-300 shadow-lg">
+                                <i class="far fa-heart text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-gray-900">Modern Villa</h3>
+                            <span
+                                class="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">$850,000</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 flex items-center">
+                            <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+                            Beverly Hills, CA
+                        </p>
+                        <div class="flex justify-between text-sm text-gray-500 mb-6">
+                            <span class="flex items-center"><i class="fas fa-bed mr-1 text-teal-600"></i> 4 Beds</span>
+                            <span class="flex items-center"><i class="fas fa-bath mr-1 text-teal-600"></i> 3
+                                Baths</span>
+                            <span class="flex items-center"><i class="fas fa-ruler-combined mr-1 text-teal-600"></i>
+                                2,500 sq ft</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-auto">
+                            <div class="flex items-center">
+                                <img src="/placeholder.svg?height=32&width=32" alt="Seller"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm text-gray-600">John Smith</span>
+                            </div>
+                            <button
+                                class="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="property-card bg-white rounded-3xl shadow-lg overflow-hidden h-full flex flex-col">
+                    <div class="relative">
+                        <img src="/placeholder.svg?height=280&width=400" alt="Downtown Apartment"
+                            class="w-full h-64 sm:h-72 object-cover">
+                        <div class="absolute top-4 left-4">
+                            <span
+                                class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">For
+                                Rent</span>
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <button
+                                class="bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 p-3 rounded-full transition-all duration-300 shadow-lg">
+                                <i class="far fa-heart text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-gray-900">Downtown Apartment</h3>
+                            <span
+                                class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">$3,200/mo</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 flex items-center">
+                            <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+                            Manhattan, NY
+                        </p>
+                        <div class="flex justify-between text-sm text-gray-500 mb-6">
+                            <span class="flex items-center"><i class="fas fa-bed mr-1 text-teal-600"></i> 2 Beds</span>
+                            <span class="flex items-center"><i class="fas fa-bath mr-1 text-teal-600"></i> 2
+                                Baths</span>
+                            <span class="flex items-center"><i class="fas fa-ruler-combined mr-1 text-teal-600"></i>
+                                1,200 sq ft</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-auto">
+                            <div class="flex items-center">
+                                <img src="/placeholder.svg?height=32&width=32" alt="Seller"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm text-gray-600">Sarah Johnson</span>
+                            </div>
+                            <button
+                                class="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="property-card bg-white rounded-3xl shadow-lg overflow-hidden h-full flex flex-col">
+                    <div class="relative">
+                        <img src="/placeholder.svg?height=280&width=400" alt="Luxury Penthouse"
+                            class="w-full h-64 sm:h-72 object-cover">
+                        <div class="absolute top-4 left-4">
+                            <span
+                                class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">For
+                                Sale</span>
+                        </div>
+                        <div class="absolute top-4 right-4">
+                            <button
+                                class="bg-white/90 hover:bg-white text-gray-700 hover:text-red-500 p-3 rounded-full transition-all duration-300 shadow-lg">
+                                <i class="far fa-heart text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-gray-900">Luxury Penthouse</h3>
+                            <span
+                                class="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">$2,100,000</span>
+                        </div>
+                        <p class="text-gray-600 mb-4 flex items-center">
+                            <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+                            Miami Beach, FL
+                        </p>
+                        <div class="flex justify-between text-sm text-gray-500 mb-6">
+                            <span class="flex items-center"><i class="fas fa-bed mr-1 text-teal-600"></i> 3 Beds</span>
+                            <span class="flex items-center"><i class="fas fa-bath mr-1 text-teal-600"></i> 3
+                                Baths</span>
+                            <span class="flex items-center"><i class="fas fa-ruler-combined mr-1 text-teal-600"></i>
+                                3,200 sq ft</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-auto">
+                            <div class="flex items-center">
+                                <img src="/placeholder.svg?height=32&width=32" alt="Seller"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm text-gray-600">Mike Davis</span>
+                            </div>
+                            <button
+                                class="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="properties.html"
+                    class="inline-block bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    View All Properties
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-white mb-6">Ready to Get Started?</h2>
+            <p class="text-xl text-teal-100 mb-8">Join thousands of buyers and sellers connecting directly</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="post-property.html"
+                    class="bg-white text-teal-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition duration-300 transform hover:scale-105">
+                    Post Your Property
+                </a>
+                <a href="contact.html"
+                    class="border-2 border-white text-white hover:bg-white hover:text-teal-600 px-8 py-3 rounded-lg font-semibold transition duration-300 transform hover:scale-105">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-2xl font-bold text-teal-400 mb-4">PropertyHub</h3>
+                    <p class="text-gray-300 mb-6 max-w-md">
+                        The modern real estate marketplace connecting buyers and sellers directly.
+                        No agents, no commissions, just transparent property transactions.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-teal-400 transition duration-300">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-teal-400 transition duration-300">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-teal-400 transition duration-300">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-teal-400 transition duration-300">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="properties.html"
+                                class="text-gray-300 hover:text-teal-400 transition duration-300">Properties</a></li>
+                        <li><a href="post-property.html"
+                                class="text-gray-300 hover:text-teal-400 transition duration-300">Post Property</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-teal-400 transition duration-300">About
+                                Us</a></li>
+                        <li><a href="faq.html" class="text-gray-300 hover:text-teal-400 transition duration-300">FAQ</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><i class="fas fa-phone mr-2 text-teal-400"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope mr-2 text-teal-400"></i> info@propertyhub.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2 text-teal-400"></i> 123 Real Estate Ave, City, State
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 PropertyHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
