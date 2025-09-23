@@ -1,0 +1,429 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ property.title }} - PropertyHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Enhanced gallery styling with modern effects */
+        .gallery-main {
+            transition: all 0.4s ease;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .gallery-thumb {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .gallery-thumb:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .gallery-thumb.active {
+            border: 3px solid #0d9488;
+            transform: scale(1.02);
+        }
+        
+        /* Glass morphism effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Added hero background styling for property detail page */
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.85), rgba(6, 182, 212, 0.75)), 
+                        url('{% static "placeholder.svg" %}?height=600&width=1920');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        /* Added fade-in animation */
+        .animate-fade-in {
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="{% url 'index' %}" class="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">PropertyHub</a>
+                    </div>
+                </div>
+                <!-- Centered navigation menu items -->
+                <div class="hidden md:flex items-center justify-center flex-1">
+                    <div class="flex items-baseline space-x-8">
+                        <a href="{% url 'index' %}" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Home</a>
+                        <a href="{% url 'properties' %}" class="text-gray-900 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Properties</a>
+                        <a href="{% url 'post_property' %}" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Post Property</a>
+                        <a href="#" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors duration-300">About</a>
+                        <a href="#" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Contact</a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="flex items-center space-x-4">
+                        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" 
+           class="mr-4 text-gray-700 hover:text-teal-600 font-semibold">
+            Hello, {{ user.username }}
+        </a>
+                            <a href="{% url 'account_logout' %}" class="bg-red-500 text-white px-4 py-2 rounded-full">Logout</a>
+                        {% else %}
+                            <a href="{% url 'account_login' %}" class="text-gray-600 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Login</a>
+                            <a href="{% url 'account_signup' %}" class="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105">Sign Up</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+  {% load static %}
+
+<!-- Hero Section -->
+<section class="relative h-80 sm:h-96 flex items-center justify-center pt-16">
+  <!-- Background Image -->
+  <div class="absolute inset-0">
+    <img src="{% static 'images/img44.jpg' %}" 
+         alt="Hero Background" 
+         class="w-full h-full object-cover">
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  </div>
+
+  <!-- Hero Text -->
+  <div class="relative text-center text-white px-4 animate-fade-in">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+      Property Details
+    </h1>
+    <p class="text-lg sm:text-xl md:text-2xl max-w-2xl mx-auto opacity-90">
+      Discover every detail of your dream property
+    </p>
+  </div>
+</section>
+
+    <!-- Property Detail -->
+    <section class="pt-8 pb-16 -mt-16 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Breadcrumb -->
+            <nav class="mb-8 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-lg">
+                <ol class="flex items-center space-x-2 text-sm text-gray-600">
+                    <li><a href="{% url 'index' %}" class="hover:text-teal-600 transition-colors duration-300">Home</a></li>
+                    <li><i class="fas fa-chevron-right text-xs"></i></li>
+                    <li><a href="{% url 'properties' %}" class="hover:text-teal-600 transition-colors duration-300">Properties</a></li>
+                    <li><i class="fas fa-chevron-right text-xs"></i></li>
+                    <li class="text-gray-900 font-medium">{{ property.title }}</li>
+                </ol>
+            </nav>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Image Gallery -->
+                <div class="lg:col-span-2">
+                    <div class="mb-6">
+                        {# main image: first uploaded image if available, otherwise placeholder #}
+                        <img id="main-image"
+                             src="{% if first_image_url %}{{ first_image_url }}{% else %}{% static 'placeholder.svg' %}?height=600&width=900{% endif %}"
+                             alt="{{ property.title }}"
+                             class="w-full h-64 sm:h-80 md:h-96 object-cover gallery-main shadow-2xl">
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-3 sm:gap-4">
+                        {# show thumbnails for uploaded images - if none, render placeholders exactly as before #}
+                        {% if images %}
+                            {% for image in images %}
+                                <img data-full-url="{{ image.image.url }}"
+                                     src="{{ image.image.url }}"
+                                     alt="{{ property.title }} image {{ forloop.counter }}"
+                                     class="gallery-thumb w-full h-16 sm:h-20 md:h-24 object-cover {% if forloop.first %}active{% endif %}">
+                            {% endfor %}
+                        {% else %}
+                            <img src="{% static 'placeholder.svg' %}?height=150&width=200" alt="Exterior" class="gallery-thumb active w-full h-16 sm:h-20 md:h-24 object-cover">
+                            <img src="{% static 'placeholder.svg' %}?height=150&width=200" alt="Living Room" class="gallery-thumb w-full h-16 sm:h-20 md:h-24 object-cover">
+                            <img src="{% static 'placeholder.svg' %}?height=150&width=200" alt="Kitchen" class="gallery-thumb w-full h-16 sm:h-20 md:h-24 object-cover">
+                            <img src="{% static 'placeholder.svg' %}?height=150&width=200" alt="Bedroom" class="gallery-thumb w-full h-16 sm:h-20 md:h-24 object-cover">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Property Info -->
+                <div class="lg:col-span-1">
+                    <div class="glass-card rounded-3xl shadow-2xl p-6 sticky top-24">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                                {{ property.listing_type|title }}
+                            </span>
+                            <button class="text-gray-400 hover:text-red-500 transition-colors duration-300 p-2">
+                                <i class="far fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{{ property.title }}</h1>
+                        <p class="text-gray-600 mb-6 flex items-start">
+                            <i class="fas fa-map-marker-alt text-teal-600 mr-2 mt-1 flex-shrink-0"></i>
+                            <span class="leading-relaxed">{{ property.full_address }}</span>
+                        </p>
+                        
+                        <div class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent mb-8">
+                            ${{ property.price }}
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4 mb-8">
+                            <div class="text-center p-4 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl">
+                                <i class="fas fa-bed text-teal-600 text-2xl mb-3"></i>
+                                <div class="font-bold text-lg">{{ property.bedrooms|default:"-" }}</div>
+                                <div class="text-sm text-gray-600">Bedrooms</div>
+                            </div>
+                            <div class="text-center p-4 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl">
+                                <i class="fas fa-bath text-teal-600 text-2xl mb-3"></i>
+                                <div class="font-bold text-lg">{{ property.bathrooms|default:"-" }}</div>
+                                <div class="text-sm text-gray-600">Bathrooms</div>
+                            </div>
+                            <div class="text-center p-4 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl">
+                                <i class="fas fa-ruler-combined text-teal-600 text-2xl mb-3"></i>
+                                <div class="font-bold text-lg">{{ property.area|default:"-" }}</div>
+                                <div class="text-sm text-gray-600">Sq Ft</div>
+                            </div>
+                        </div>
+
+                        <!-- Seller Info -->
+                        <div class="border-t border-gray-200 pt-6">
+                            <h3 class="font-semibold text-gray-900 mb-4">Contact Seller</h3>
+                            <div class="flex items-center mb-6">
+                                {# If you have seller avatar URL in DB use it; we keep placeholder as before #}
+                                <img src="{% static 'placeholder.svg' %}?height=50&width=50" alt="{{ property.contact_name }}" class="w-12 h-12 rounded-full mr-3 shadow-lg">
+                                <div>
+                                    <div class="font-semibold text-gray-900">{{ property.contact_name }}</div>
+                                    <div class="text-sm text-gray-600">Property Owner</div>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <a href="tel:{{ property.contact_phone }}" class="flex items-center justify-center w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                    <i class="fas fa-phone mr-2"></i>
+                                    Call Now
+                                </a>
+                                <a href="mailto:{{ property.contact_email }}" class="flex items-center justify-center w-full border-2 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white py-3 rounded-xl font-semibold transition-all duration-300">
+                                    <i class="fas fa-envelope mr-2"></i>
+                                    Send Email
+                                </a>
+                                <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold transition-all duration-300">
+                                    <i class="fas fa-comments mr-2"></i>
+                                    Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Details -->
+            <div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Description -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Property Description</h2>
+                        <div class="prose max-w-none text-gray-600">
+                            <p class="mb-4">{{ property.description|linebreaksbr }}</p>
+                        </div>
+
+                        <!-- Features -->
+                        <div class="mt-8">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Property Features</h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {% if property.swimming_pool %}
+            <div class="flex items-center"><i class="fas fa-swimming-pool text-teal-600 mr-3"></i><span>Swimming Pool</span></div>
+        {% endif %}
+        {% if property.garage %}
+            <div class="flex items-center"><i class="fas fa-car text-teal-600 mr-3"></i><span>Garage</span></div>
+        {% endif %}
+        {% if property.garden %}
+            <div class="flex items-center"><i class="fas fa-tree text-teal-600 mr-3"></i><span>Garden</span></div>
+        {% endif %}
+        {% if property.fireplace %}
+            <div class="flex items-center"><i class="fas fa-fire text-teal-600 mr-3"></i><span>Fireplace</span></div>
+        {% endif %}
+        {% if property.central_ac %}
+            <div class="flex items-center"><i class="fas fa-wind text-teal-600 mr-3"></i><span>Central AC</span></div>
+        {% endif %}
+        {% if property.security_system %}
+            <div class="flex items-center"><i class="fas fa-shield-alt text-teal-600 mr-3"></i><span>Security System</span></div>
+        {% endif %}
+        {% if property.parking %}
+            <div class="flex items-center"><i class="fas fa-parking text-teal-600 mr-3"></i><span>Parking</span></div>
+        {% endif %}
+        {% if property.smart_home %}
+            <div class="flex items-center"><i class="fas fa-home text-teal-600 mr-3"></i><span>Smart Home</span></div>
+        {% endif %}
+
+        {% if not property.swimming_pool and not property.garage and not property.garden and not property.fireplace and not property.central_ac and not property.security_system and not property.parking and not property.smart_home %}
+            <p class="text-gray-500">No additional features listed.</p>
+        {% endif %}
+    </div>
+</div>
+
+                    </div>
+                </div>
+
+                <!-- Property Details Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">Property Details</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Property Type:</span>
+                                <span class="font-semibold">{{ property.property_type }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Year Built:</span>
+                                <span class="font-semibold">{{ property.year_built|default:"-" }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Area:</span>
+                                <span class="font-semibold">{{ property.area|default:"-" }} ft²</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Property ID:</span>
+                                <span class="font-semibold">#{{ property.id }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Status:</span>
+                                <span class="font-semibold text-teal-600">Available</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Listed:</span>
+                                <span class="font-semibold">{{ property.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+
+                        <!-- Share -->
+                        <div class="mt-8 pt-6 border-t">
+                            <h4 class="font-semibold text-gray-900 mb-4">Share Property</h4>
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-300">
+                                    <i class="fab fa-facebook-f"></i>
+                                </button>
+                                <button class="flex-1 bg-sky-500 hover:bg-sky-600 text-white py-2 rounded-lg transition duration-300">
+                                    <i class="fab fa-twitter"></i>
+                                </button>
+                                <button class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition duration-300">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                                <button class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition duration-300">
+                                    <i class="fas fa-link"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+<!-- Similar Properties Section -->
+<section class="bg-gray-50 py-12 mt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl font-bold text-gray-900 mb-8">Similar Properties</h2>
+    <div class="grid gap-8 md:grid-cols-3">
+      {% for prop in similar_properties %}
+      <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition duration-300">
+        <a href="{% url 'property_detail' prop.id %}">
+          {% if prop.images.first %}
+            <img src="{{ prop.images.first.image.url }}" 
+                 alt="{{ prop.title }}" 
+                 class="w-full h-48 object-cover">
+          {% else %}
+            <img src="https://placehold.co/600x400" 
+                 alt="No image available" 
+                 class="w-full h-48 object-cover">
+          {% endif %}
+        </a>
+        <div class="p-4">
+          <h3 class="text-lg font-semibold text-gray-800 truncate">
+            <a href="{% url 'property_detail' prop.id %}">{{ prop.title }}</a>
+          </h3>
+          <p class="text-gray-600">{{ prop.city }}, {{ prop.state }}</p>
+          <p class="text-indigo-600 font-bold mt-2">${{ prop.price|floatformat:0 }}</p>
+          <div class="flex items-center text-gray-500 text-sm mt-2 space-x-4">
+            <span>{{ prop.bedrooms }} 🛏</span>
+            <span>{{ prop.bathrooms }} 🛁</span>
+            <span>{{ prop.area }} sqft</span>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-gray-500">No similar properties found.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-2xl font-bold text-teal-400 mb-4">PropertyHub</h3>
+                    <p class="text-gray-300 mb-6 max-w-md">
+                        The modern real estate marketplace connecting buyers and sellers directly.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'properties' %}" class="text-gray-300 hover:text-teal-400 transition duration-300">Properties</a></li>
+                        <li><a href="{% url 'post_property' %}" class="text-gray-300 hover:text-teal-400 transition duration-300">Post Property</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-teal-400 transition duration-300">About Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><i class="fas fa-phone mr-2 text-teal-400"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope mr-2 text-teal-400"></i> info@propertyhub.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // thumbnail click -> swap main image
+        document.addEventListener('DOMContentLoaded', function () {
+            const thumbs = document.querySelectorAll('.gallery-thumb');
+            const main = document.getElementById('main-image');
+
+            thumbs.forEach(function (t) {
+                t.addEventListener('click', function () {
+                    // If thumbnail has data-full-url use it; else fallback to src
+                    const newUrl = t.dataset.fullUrl ? t.dataset.fullUrl : t.src;
+                    main.src = newUrl;
+
+                    // active class
+                    thumbs.forEach(x => x.classList.remove('active'));
+                    t.classList.add('active');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
-from accounts import views   # import your app views
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.index, name="index"),   # 👈 homepage at /
-    path("accounts/", include("allauth.urls")),  # django-allauth
-    path("", include("accounts.urls")),
+    path("", include("accounts.urls")),        # routes from your app
+    path("accounts/", include("allauth.urls")), # allauth routes
 ]
+if settings.DEBUG:  # only in development
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

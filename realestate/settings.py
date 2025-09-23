@@ -108,11 +108,20 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ✅ Allauth simple email login
-LOGIN_REDIRECT_URL = '/'     # after login/signup go home
+LOGIN_REDIRECT_URL = 'index'     # after login/signup go home
 LOGOUT_REDIRECT_URL = '/'    # after logout go home
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_VERIFICATION = "none"   # keep it simple for now
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"   # keep it simple for now
+
+
+# settings.py
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# Emails just print in your console instead of actually sending
+
+# Media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
