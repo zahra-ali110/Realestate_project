@@ -4,54 +4,54 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post Your Property - PropertyHub</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Your Property - PropertyHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    body {
-      font-family: 'Inter', sans-serif;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
-    .hero-bg {
-      background: linear-gradient(135deg, rgba(20, 184, 166, 0.9), rgba(6, 182, 212, 0.8)), url('/placeholder.svg?height=400&width=1920');
-      background-size: cover;
-      background-position: center;
-    }
+        .hero-bg {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.9), rgba(6, 182, 212, 0.8)), url('/placeholder.svg?height=400&width=1920');
+            background-size: cover;
+            background-position: center;
+        }
 
-    .step-indicator {
-      transition: all 0.3s ease;
-    }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
 
-    .step-indicator.active {
-      background-color: #0d9488;
-      color: white;
-    }
+        .step-indicator.active {
+            background-color: #0d9488;
+            color: white;
+        }
 
-    .step-indicator.completed {
-      background-color: #10b981;
-      color: white;
-    }
+        .step-indicator.completed {
+            background-color: #10b981;
+            color: white;
+        }
 
-    .drag-drop-area {
-      border: 2px dashed #d1d5db;
-      transition: all 0.3s ease;
-    }
+        .drag-drop-area {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
 
-    .drag-drop-area.dragover {
-      border-color: #0d9488;
-      background-color: #f0fdfa;
-    }
-  </style>
+        .drag-drop-area.dragover {
+            border-color: #0d9488;
+            background-color: #f0fdfa;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50">
 
-  <!-- Navbar -->
-  <nav class="bg-white/95 backdrop-blur-md shadow-lg fixed w-full top-0 z-50 transition-all duration-300">
+    <!-- Navbar -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-lg fixed w-full top-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="{% url 'index' %}"
@@ -98,323 +98,356 @@
         </div>
     </nav>
 
-  <!-- Hero -->
-<section class="relative hero-bg h-96 flex items-center justify-center pt-16 bg-[url('{% static "images/img2.jpg" %}')] bg-cover bg-center bg-black/40 bg-blend-overlay">
-    <div class="text-center text-white">
-      <h1 class="text-5xl font-bold mb-4">Post Your Property</h1>
-      <p class="text-xl">List your property and connect directly with buyers</p>
-    </div>
-  </section>
-
-  <!-- Form -->
-  <section class="py-16 -mt-18 relative z-10">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Steps -->
-      <div class="flex justify-center mb-12">
-        <div class="flex items-center space-x-4">
-          <div
-            class="step-indicator active flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
-            1</div>
-          <div class="w-16 h-1 bg-gray-300"></div>
-          <div
-            class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
-            2</div>
-          <div class="w-16 h-1 bg-gray-300"></div>
-          <div
-            class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
-            3</div>
+    <!-- Hero -->
+    <section class="relative hero-bg h-96 flex items-center justify-center pt-16 bg-[url('{% static " images/img2.jpg"
+        %}')] bg-cover bg-center bg-black/40 bg-blend-overlay">
+        <div class="text-center text-white">
+            <h1 class="text-5xl font-bold mb-4">Post Your Property</h1>
+            <p class="text-xl">List your property and connect directly with buyers</p>
         </div>
-      </div>
+    </section>
 
-      <div class="bg-white rounded-2xl shadow-xl p-8">
-    <form id="property-form" method="POST">
-        {% csrf_token %}
-
-        <!-- STEP 1 -->
-        <div id="step-1" class="step-content">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8">Basic Property Information</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Property Title *</label>
-                    <input type="text" name="title" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="e.g., Modern Villa in Beverly Hills">
+    <!-- Form -->
+    <section class="py-16 -mt-18 relative z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Steps -->
+            <div class="flex justify-center mb-12">
+                <div class="flex items-center space-x-4">
+                    <div
+                        class="step-indicator active flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                        1</div>
+                    <div class="w-16 h-1 bg-gray-300"></div>
+                    <div
+                        class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                        2</div>
+                    <div class="w-16 h-1 bg-gray-300"></div>
+                    <div
+                        class="step-indicator flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                        3</div>
                 </div>
+            </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Property Type *</label>
-                    <select name="property_type" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                        <option value="">Select Property Type</option>
-                        <option value="house">House</option>
-                        <option value="apartment">Apartment</option>
-                        <option value="villa">Villa</option>
-                        <option value="condo">Condo</option>
-                        <option value="commercial">Commercial</option>
-                        <option value="land">Land</option>
-                    </select>
-                </div>
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <form id="property-form" method="POST">
+                    {% csrf_token %}
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Listing Type *</label>
-                    <select name="listing_type" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                        <option value="">Select Listing Type</option>
-                        <option value="sale">For Sale</option>
-                        <option value="rent">For Rent</option>
-                    </select>
-                </div>
+                    <!-- STEP 1 -->
+                    <div id="step-1" class="step-content">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-8">Basic Property Information</h2>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-3 text-gray-500">$</span>
-                        <input type="number" name="price" required class="w-full p-3 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="850000">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Property Title *</label>
+                                <input type="text" name="title" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="e.g., Modern Villa in Beverly Hills">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Property Type *</label>
+                                <select name="property_type" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Property Type</option>
+                                    <option value="house">House</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="villa">Villa</option>
+                                    <option value="condo">Condo</option>
+                                    <option value="commercial">Commercial</option>
+                                    <option value="land">Land</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Listing Type *</label>
+                                <select name="listing_type" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Listing Type</option>
+                                    <option value="sale">For Sale</option>
+                                    <option value="rent">For Rent</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 text-gray-500">$</span>
+                                    <input type="number" name="price" required
+                                        class="w-full p-3 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                        placeholder="850000">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
+                                <select name="bedrooms"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Bedrooms</option>
+                                    <option value="1">1 Bedroom</option>
+                                    <option value="2">2 Bedrooms</option>
+                                    <option value="3">3 Bedrooms</option>
+                                    <option value="4">4 Bedrooms</option>
+                                    <option value="5+">5+ Bedrooms</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
+                                <select name="bathrooms"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select Bathrooms</option>
+                                    <option value="1">1 Bathroom</option>
+                                    <option value="2">2 Bathrooms</option>
+                                    <option value="3">3 Bathrooms</option>
+                                    <option value="4">4 Bathrooms</option>
+                                    <option value="5+">5+ Bathrooms</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Area (sq ft)</label>
+                                <input type="number" name="area"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="2500">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Year Built</label>
+                                <input type="number" name="year_built"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="2020">
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Property Description *</label>
+                            <textarea name="description" required rows="4"
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                placeholder="Describe your property in detail..."></textarea>
+                        </div>
+
+                        <div class="flex justify-end mt-8">
+                            <button type="button" id="next-step-1"
+                                class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                Next Step <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
-                    <select name="bedrooms" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                        <option value="">Select Bedrooms</option>
-                        <option value="1">1 Bedroom</option>
-                        <option value="2">2 Bedrooms</option>
-                        <option value="3">3 Bedrooms</option>
-                        <option value="4">4 Bedrooms</option>
-                        <option value="5+">5+ Bedrooms</option>
-                    </select>
-                </div>
+                    <!-- STEP 2 -->
+                    <div id="step-2" class="step-content hidden">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-8">Location & Features</h2>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
-                    <select name="bathrooms" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                        <option value="">Select Bathrooms</option>
-                        <option value="1">1 Bathroom</option>
-                        <option value="2">2 Bathrooms</option>
-                        <option value="3">3 Bathrooms</option>
-                        <option value="4">4 Bathrooms</option>
-                        <option value="5+">5+ Bathrooms</option>
-                    </select>
-                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Address *</label>
+                                <input type="text" name="full_address" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="123 Main Street, City, State, ZIP">
+                            </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Area (sq ft)</label>
-                    <input type="number" name="area" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="2500">
-                </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                                <input type="text" name="city" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="Beverly Hills">
+                            </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Year Built</label>
-                    <input type="number" name="year_built" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="2020">
-                </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                                <select name="state" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="">Select State</option>
+                                    <option value="CA">California</option>
+                                    <option value="NY">New York</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="FL">Florida</option>
+                                    <option value="IL">Illinois</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <label class="block text-sm font-medium text-gray-700 mb-4">Property Features</label>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="swimming_pool"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Swimming Pool</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="garage"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Garage</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="garden"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Garden</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="fireplace"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Fireplace</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="central_ac"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Central AC</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="security_system"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Security System</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="balcony"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Balcony</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="parking"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Parking</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="smart_home"
+                                        class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                                    <span class="ml-2">Smart Home</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-8">
+                            <button type="button" id="prev-step-2"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Previous
+                            </button>
+                            <button type="button" id="next-step-2"
+                                class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                Next Step <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div id="step-3" class="step-content hidden">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-8">Photos & Contact Information</h2>
+
+                        <div class="mb-8">
+                            <label class="block text-sm font-medium text-gray-700 mb-4">Property Photos *</label>
+                            <!-- ✅ name changed to "image" to match your Django view -->
+                            <input type="file" name="image" multiple required
+                                class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                            <p class="text-sm text-gray-500 mt-2">Maximum 10 photos, 5MB each</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Your Name *</label>
+                                <input type="text" name="contact_name" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="John Smith">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                                <input type="tel" name="contact_phone" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="+1 (555) 123-4567">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                                <input type="email" name="contact_email" required
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                    placeholder="john@example.com">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Contact
+                                    Method</label>
+                                <select name="preferred_contact"
+                                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                                    <option value="phone">Phone</option>
+                                    <option value="email">Email</option>
+                                    <option value="both">Both</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between mt-8">
+                            <button type="button" id="prev-step-3"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                <i class="fas fa-arrow-left mr-2"></i> Previous
+                            </button>
+                            <button type="submit"
+                                class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
+                                <i class="fas fa-check mr-2"></i> Submit Property
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
 
-            <div class="mt-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Property Description *</label>
-                <textarea name="description" required rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Describe your property in detail..."></textarea>
-            </div>
 
-            <div class="flex justify-end mt-8">
-                <button type="button" id="next-step-1" class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
-                    Next Step <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-            </div>
         </div>
+    </section>
 
-        <!-- STEP 2 -->
-        <div id="step-2" class="step-content hidden">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8">Location & Features</h2>
+    <!-- JS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            setupMultiStepForm()
+        })
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Address *</label>
-                    <input type="text" name="full_address" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="123 Main Street, City, State, ZIP">
-                </div>
+        function setupMultiStepForm() {
+            const totalSteps = 3
+            let currentStep = 1
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
-                    <input type="text" name="city" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" placeholder="Beverly Hills">
-                </div>
+            document.getElementById("next-step-1").addEventListener("click", () => {
+                if (validateStep(1)) showStep(2)
+            })
+            document.getElementById("next-step-2").addEventListener("click", () => {
+                if (validateStep(2)) showStep(3)
+            })
+            document.getElementById("prev-step-2").addEventListener("click", () => showStep(1))
+            document.getElementById("prev-step-3").addEventListener("click", () => showStep(2))
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">State *</label>
-                    <select name="state" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                        <option value="">Select State</option>
-                        <option value="CA">California</option>
-                        <option value="NY">New York</option>
-                        <option value="TX">Texas</option>
-                        <option value="FL">Florida</option>
-                        <option value="IL">Illinois</option>
-                    </select>
-                </div>
-            </div>
+            function showStep(step) {
+                for (let i = 1; i <= totalSteps; i++) {
+                    document.getElementById(`step-${i}`).classList.add("hidden")
+                }
+                document.getElementById(`step-${step}`).classList.remove("hidden")
+                updateStepIndicators(step)
+                currentStep = step
+            }
 
-            <div class="mt-8">
-                <label class="block text-sm font-medium text-gray-700 mb-4">Property Features</label>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" name="swimming_pool" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Swimming Pool</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="garage" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Garage</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="garden" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Garden</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="fireplace" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Fireplace</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="central_ac" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Central AC</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="security_system" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Security System</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="balcony" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Balcony</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="parking" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Parking</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="smart_home" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500">
-                        <span class="ml-2">Smart Home</span>
-                    </label>
-                </div>
-            </div>
+            function updateStepIndicators(activeStep) {
+                const indicators = document.querySelectorAll(".step-indicator")
+                indicators.forEach((indicator, index) => {
+                    const stepNumber = index + 1
+                    indicator.classList.remove("active", "completed")
+                    if (stepNumber < activeStep) indicator.classList.add("completed")
+                    else if (stepNumber === activeStep) indicator.classList.add("active")
+                })
+            }
 
-            <div class="flex justify-between mt-8">
-                <button type="button" id="prev-step-2" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition duration-300">
-                    <i class="fas fa-arrow-left mr-2"></i> Previous
-                </button>
-                <button type="button" id="next-step-2" class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
-                    Next Step <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- STEP 3 -->
-       <div id="step-3" class="step-content hidden">
-    <h2 class="text-2xl font-bold text-gray-900 mb-8">Photos & Contact Information</h2>
-
-    <div class="mb-8">
-        <label class="block text-sm font-medium text-gray-700 mb-4">Property Photos *</label>
-        <!-- ✅ name changed to "image" to match your Django view -->
-        <input type="file" name="image" multiple required 
-               class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-        <p class="text-sm text-gray-500 mt-2">Maximum 10 photos, 5MB each</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Your Name *</label>
-            <input type="text" name="contact_name" required 
-                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" 
-                   placeholder="John Smith">
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-            <input type="tel" name="contact_phone" required 
-                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" 
-                   placeholder="+1 (555) 123-4567">
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-            <input type="email" name="contact_email" required 
-                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" 
-                   placeholder="john@example.com">
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Contact Method</label>
-            <select name="preferred_contact" 
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
-                <option value="phone">Phone</option>
-                <option value="email">Email</option>
-                <option value="both">Both</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="flex justify-between mt-8">
-        <button type="button" id="prev-step-3" 
-                class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition duration-300">
-            <i class="fas fa-arrow-left mr-2"></i> Previous
-        </button>
-        <button type="submit" 
-                class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300">
-            <i class="fas fa-check mr-2"></i> Submit Property
-        </button>
-    </div>
-</div>
-
-    </form>
-</div>
-
-
-    </div>
-  </section>
-
-  <!-- JS -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      setupMultiStepForm()
-    })
-
-    function setupMultiStepForm() {
-      const totalSteps = 3
-      let currentStep = 1
-
-      document.getElementById("next-step-1").addEventListener("click", () => {
-        if (validateStep(1)) showStep(2)
-      })
-      document.getElementById("next-step-2").addEventListener("click", () => {
-        if (validateStep(2)) showStep(3)
-      })
-      document.getElementById("prev-step-2").addEventListener("click", () => showStep(1))
-      document.getElementById("prev-step-3").addEventListener("click", () => showStep(2))
-
-      function showStep(step) {
-        for (let i = 1; i <= totalSteps; i++) {
-          document.getElementById(`step-${i}`).classList.add("hidden")
+            function validateStep(step) {
+                const stepElement = document.getElementById(`step-${step}`)
+                const requiredFields = stepElement.querySelectorAll("[required]")
+                let isValid = true
+                requiredFields.forEach((field) => {
+                    if (!field.value.trim()) {
+                        field.classList.add("border-red-500")
+                        isValid = false
+                    } else {
+                        field.classList.remove("border-red-500")
+                    }
+                })
+                return isValid
+            }
         }
-        document.getElementById(`step-${step}`).classList.remove("hidden")
-        updateStepIndicators(step)
-        currentStep = step
-      }
-
-      function updateStepIndicators(activeStep) {
-        const indicators = document.querySelectorAll(".step-indicator")
-        indicators.forEach((indicator, index) => {
-          const stepNumber = index + 1
-          indicator.classList.remove("active", "completed")
-          if (stepNumber < activeStep) indicator.classList.add("completed")
-          else if (stepNumber === activeStep) indicator.classList.add("active")
-        })
-      }
-
-      function validateStep(step) {
-        const stepElement = document.getElementById(`step-${step}`)
-        const requiredFields = stepElement.querySelectorAll("[required]")
-        let isValid = true
-        requiredFields.forEach((field) => {
-          if (!field.value.trim()) {
-            field.classList.add("border-red-500")
-            isValid = false
-          } else {
-            field.classList.remove("border-red-500")
-          }
-        })
-        return isValid
-      }
-    }
-  </script>
+    </script>
 </body>
 
 </html>
