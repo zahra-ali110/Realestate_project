@@ -105,12 +105,13 @@ USE_TZ = True
 # Static files
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 # Whitenoise for serving static files
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
-
+# Media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Make Whitenoise compress & cache static files
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # ✅ Allauth simple email login
@@ -140,22 +141,3 @@ EMAIL_HOST_PASSWORD = "rpaj gqji xwga ufbi"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-# Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "manage.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "realestate/wsgi.py"
-    }
-  ]
-}
