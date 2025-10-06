@@ -2,16 +2,14 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Property, PropertyImage
+from .models import CustomUser   # ✅ add this import
 
-
-# Signup form
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
-        model = User
-        fields = ["username", "email", "password1", "password2"]
-
+        model = CustomUser   # ✅ use your custom user model
+        fields = ["email", "password1", "password2"]
 
 # Property form (main data)
 class PropertyForm(forms.ModelForm):

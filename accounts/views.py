@@ -13,19 +13,69 @@ def index(request):
     top_properties = Property.objects.all().order_by('-price')[:3]
     return render(request, "account/index.html", {"top_properties": top_properties})
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
+from django.contrib import messages
+
+from .forms import SignUpForm
+from .models import CustomUser
 
 
-# User Signup
+# ✅ Signup with email verification
 def signup_view(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect("index")
+            user = form.save(commit=False)
+            user.is_active = False  # deactivate until email verified
+            user.save()
+
+            # ✅ Create verification token
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            current_site = get_current_site(request)
+            activation_link = f"http://{current_site.domain}/accounts/activate/{uid}/{token}/"
+
+            # ✅ Send verification email
+            subject = "Activate Your Account"
+            message = render_to_string("account/activation_email.html", {
+                "user": user,
+                "activation_link": activation_link,
+            })
+            email = EmailMessage(subject, message, to=[user.email])
+            email.send()
+
+            messages.success(request, "Verification link sent to your email.")
+            return redirect("login")
     else:
-        form = UserCreationForm()
+        form = SignUpForm()
+
     return render(request, "account/signup.html", {"form": form})
+
+
+# ✅ Account activation view
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        user = None
+
+    # Verify token and activate user
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Your account has been activated! You can now log in.")
+        return redirect("login")
+    else:
+        messages.error(request, "Activation link is invalid or has expired.")
+        return redirect("signup")
 
 
 # User Login
